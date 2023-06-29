@@ -20,7 +20,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-public class UsersController {
+public class UsersController extends BaseController {
 
     private final AuthManager authManager;
     private final UsersManager usersManager;

@@ -12,7 +12,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/purchaseHistory")
 @RequiredArgsConstructor
-public class PurchaseHistoryController {
+public class PurchaseHistoryController extends BaseController {
 
     private final AuthManager authManager;
     private final PurchaseHistoryManager purchaseHistoryManager;

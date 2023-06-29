@@ -16,7 +16,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/wallets")
 @RequiredArgsConstructor
-public class WalletsController {
+public class WalletsController extends BaseController {
 
     private final AuthManager authManager;
     private final WalletsManager walletsManager;

@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/shops")
 @RequiredArgsConstructor
-public class ShopsController {
+public class ShopsController extends BaseController {
 
     private final AuthManager authManager;
     private final ShopsManager shopsManager;

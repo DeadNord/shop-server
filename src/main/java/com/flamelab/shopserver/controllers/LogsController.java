@@ -15,7 +15,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/logs")
 @RequiredArgsConstructor
-public class LogsController {
+public class LogsController extends BaseController {
 
     private final AuthManager authManager;
 
