@@ -4,18 +4,16 @@ import com.flamelab.shopserver.dtos.transfer.TransferAuthTokenDto;
 import com.flamelab.shopserver.managers.AuthManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.flamelab.shopserver.enums.Roles.ADMIN;
 import static org.springframework.http.HttpStatus.OK;
 
+@CrossOrigin(origins = "http://localhost:3000/")
 @RestController
 @RequestMapping("/logs")
 @RequiredArgsConstructor
-public class LogsController extends BaseController {
+public class LogsController {
 
     private final AuthManager authManager;
 

@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.OK;
 
+@CrossOrigin(origins = "http://localhost:3000/")
 @RestController
 @RequestMapping("/purchaseHistory")
 @RequiredArgsConstructor
-public class PurchaseHistoryController extends BaseController {
+public class PurchaseHistoryController {
 
     private final AuthManager authManager;
     private final PurchaseHistoryManager purchaseHistoryManager;

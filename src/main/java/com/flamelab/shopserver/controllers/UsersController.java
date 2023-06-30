@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import static com.flamelab.shopserver.enums.Roles.ADMIN;
 import static org.springframework.http.HttpStatus.*;
 
+@CrossOrigin(origins = "http://localhost:3000/")
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-public class UsersController extends BaseController {
+public class UsersController {
 
     private final AuthManager authManager;
     private final UsersManager usersManager;

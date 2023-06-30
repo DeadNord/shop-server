@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.OK;
 
+@CrossOrigin(origins = "http://localhost:3000/")
 @RestController
 @RequestMapping("/wallets")
 @RequiredArgsConstructor
-public class WalletsController extends BaseController {
+public class WalletsController {
 
     private final AuthManager authManager;
     private final WalletsManager walletsManager;
