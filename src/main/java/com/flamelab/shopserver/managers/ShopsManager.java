@@ -17,7 +17,7 @@ public interface ShopsManager {
 
     List<TransferShopDto> getAllShopsByOwnerId(TransferAuthTokenDto authToken, String ownerId);
 
-    List<TransferShopDto> getAllShopsByTextInParameters(TransferAuthTokenDto validateAuthToken, String text);
+    List<TransferShopDto> getAllShopsByTextInParameters(TransferAuthTokenDto authToken, String text);
 
     List<TransferProductDto> getAllProductsInTheShop(TransferAuthTokenDto authToken, String shopId);
 

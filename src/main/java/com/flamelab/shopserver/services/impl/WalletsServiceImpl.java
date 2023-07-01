@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.flamelab.shopserver.enums.NumberActionType.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -54,6 +55,13 @@ public class WalletsServiceImpl implements WalletsService {
     @Override
     public List<Wallet> getAllWallets() {
         return walletsRepository.findAll();
+    }
+
+    @Override
+    public List<Wallet> getAllWalletsByShopsIds(List<String> shopIds) {
+        return shopIds.stream()
+                .map(this::getWalletByOwnerId)
+                .collect(Collectors.toList());
     }
 
     @Override

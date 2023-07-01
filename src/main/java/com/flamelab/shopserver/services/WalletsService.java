@@ -17,6 +17,8 @@ public interface WalletsService {
 
     List<Wallet> getAllWallets();
 
+    List<Wallet> getAllWalletsByShopsIds(List<String> shopIds);
+
     Wallet updateWalletAmount(String walletId, NumberActionType actionType, double amount);
 
     void setWalletOwner(String walletId, WalletOwnerTypes ownerType, String ownerId, String ownerName);

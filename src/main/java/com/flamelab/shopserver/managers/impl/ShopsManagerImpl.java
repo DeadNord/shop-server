@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.flamelab.shopserver.enums.NumberActionType.*;
 import static com.flamelab.shopserver.enums.WalletOwnerTypes.SHOP;
@@ -45,27 +46,35 @@ public class ShopsManagerImpl implements ShopsManager {
         Wallet wallet = walletsService.createWallet(new CreateWalletDto(START_SHOP_MONEY));
         Shop shop = shopsService.createShop(createShopDto, wallet.getId(), authToken.getUserId());
         walletsService.setWalletOwner(wallet.getId(), SHOP, shop.getId(), shop.getName());
-        return shopMapper.mapToDto(shopsService.getShopById(shop.getId()));
+        List<Shop> allShopsByOwnerId = shopsService.getAllShopsByOwnerId(authToken.getUserId());
+        walletsService.getAllWalletsByShopsIds(allShopsByOwnerId.stream().map(Shop::getId).collect(Collectors.toList()));
+        return shopMapper.mapToDto(shopsService.getShopById(shop.getId()), walletsService.getWalletById(wallet.getId()));
     }
 
     @Override
     public TransferShopDto getShopById(TransferAuthTokenDto authToken, String shopId) {
-        return shopMapper.mapToDto(shopsService.getShopById(shopId));
+        return shopMapper.mapToDto(shopsService.getShopById(shopId), walletsService.getWalletByOwnerId(authToken.getUserId()));
     }
 
     @Override
     public List<TransferShopDto> getAllShops(TransferAuthTokenDto authToken) {
-        return shopMapper.mapToDtoList(shopsService.getAllShops());
+        List<Shop> allShopsByOwnerId = shopsService.getAllShops();
+        List<Wallet> allWalletsByShopsIds = walletsService.getAllWalletsByShopsIds(allShopsByOwnerId.stream().map(Shop::getId).collect(Collectors.toList()));
+        return shopMapper.mapToDtoList(shopsService.getAllShops(), allWalletsByShopsIds);
     }
 
     @Override
     public List<TransferShopDto> getAllShopsByOwnerId(TransferAuthTokenDto authToken, String ownerId) {
-        return shopMapper.mapToDtoList(shopsService.getAllShopsByOwnerId(ownerId));
+        List<Shop> allShopsByOwnerId = shopsService.getAllShopsByOwnerId(ownerId);
+        List<Wallet> allWalletsByShopsIds = walletsService.getAllWalletsByShopsIds(allShopsByOwnerId.stream().map(Shop::getId).collect(Collectors.toList()));
+        return shopMapper.mapToDtoList(allShopsByOwnerId, allWalletsByShopsIds);
     }
 
     @Override
-    public List<TransferShopDto> getAllShopsByTextInParameters(TransferAuthTokenDto validateAuthToken, String text) {
-        return shopMapper.mapToDtoList(shopsService.getAllShopsByTextInName(text));
+    public List<TransferShopDto> getAllShopsByTextInParameters(TransferAuthTokenDto authToken, String text) {
+        List<Shop> allShopsByOwnerId = shopsService.getAllShopsByOwnerId(authToken.getUserId());
+        List<Wallet> allWalletsByShopsIds = walletsService.getAllWalletsByShopsIds(allShopsByOwnerId.stream().map(Shop::getId).collect(Collectors.toList()));
+        return shopMapper.mapToDtoList(shopsService.getAllShopsByTextInName(text), allWalletsByShopsIds);
     }
 
     @Override
@@ -75,7 +84,8 @@ public class ShopsManagerImpl implements ShopsManager {
 
     @Override
     public TransferShopDto renameShop(TransferAuthTokenDto authToken, String shopId, String newName) {
-        return shopMapper.mapToDto(shopsService.renameShop(shopId, newName));
+        Wallet walletByOwnerId = walletsService.getWalletByOwnerId(authToken.getUserId());
+        return shopMapper.mapToDto(shopsService.renameShop(shopId, newName), walletByOwnerId);
     }
 
     @Override
