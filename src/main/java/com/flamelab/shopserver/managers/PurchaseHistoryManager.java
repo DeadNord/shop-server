@@ -11,4 +11,6 @@ public interface PurchaseHistoryManager {
 
     List<TransferPurchaseOperationDto> getPurchaseHistoryForShop(TransferAuthTokenDto authToken, String shopId);
 
+    List<TransferPurchaseOperationDto> getPurchaseHistoryForShopByProductId(TransferAuthTokenDto authToken, String shopId, String productId);
+
 }

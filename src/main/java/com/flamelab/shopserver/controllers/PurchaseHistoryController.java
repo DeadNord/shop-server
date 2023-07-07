@@ -36,4 +36,14 @@ public class PurchaseHistoryController {
                         shopId));
     }
 
+    @GetMapping("/shop/{shopId}/product/{productId}")
+    public ResponseEntity<?> getPurchaseHistoryForShopByProduct(@RequestHeader("Authorization") String authorization, @PathVariable String shopId, @PathVariable String productId) {
+        return ResponseEntity
+                .status(OK)
+                .body(purchaseHistoryManager.getPurchaseHistoryForShopByProductId(
+                        authManager.validateAuthToken(authorization, Roles.ADMIN_MERCHANT()),
+                        shopId,
+                        productId));
+    }
+
 }
