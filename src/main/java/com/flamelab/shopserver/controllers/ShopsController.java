@@ -114,7 +114,7 @@ public class ShopsController {
         return ResponseEntity
                 .status(OK)
                 .body(shopsManager.buyProductsUserFromTheShop(
-                        authManager.validateAuthToken(authorization, Roles.MERCHANT()),
+                        authManager.validateAuthToken(authorization, Roles.CUSTOMER()),
                         shopId, productId, productAmount));
     }
 
