@@ -43,7 +43,7 @@ public class ShopsController {
         return ResponseEntity
                 .status(OK)
                 .body(shopsManager.getAllShops(
-                        authManager.validateAuthToken(authorization, Roles.ADMIN())));
+                        authManager.validateAuthToken(authorization, Roles.ADMIN_CUSTOMER())));
     }
 
     @GetMapping("/byOwnerId/{ownerId}")
