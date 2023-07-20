@@ -22,6 +22,7 @@ import com.flamelab.shopserver.utiles.RandomDataGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -109,7 +110,12 @@ public class UsersManagerImpl implements UsersManager {
     @Override
     public List<TransferUserDto> getAllUsers(TransferAuthTokenDto authToken) {
         List<User> users = usersService.getAllUsers();
-        List<Wallet> wallets = walletsService.getWalletsByOwnerIds(users.stream().map(User::getId).collect(Collectors.toList()));
+        List<Wallet> wallets = new ArrayList<>();
+        for (User user : users) {
+            if (!user.getRole().equals(ADMIN.name())) {
+                wallets.add(walletsService.getWalletByOwnerId(user.getId()));
+            }
+        }
         return usersMapper.mapToDtoList(users, wallets);
     }
 

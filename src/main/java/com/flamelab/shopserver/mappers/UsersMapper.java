@@ -49,12 +49,21 @@ public class UsersMapper {
             transferDtoList.add(
                     mapToDto(
                             user,
-                            walletList.stream()
-                                    .filter(wallet -> wallet.getOwnerId().equals(user.getId()))
-                                    .findFirst().get()
+                            getWalletByUserId(user.getId(), walletList)
                     ));
         }
         return transferDtoList;
+    }
+
+    private Wallet getWalletByUserId(String userid, List<Wallet> walletList) {
+        Wallet resultWallet = new Wallet();
+        resultWallet.setOwnerType(ADMIN_OWNER.name());
+        for (Wallet wallet : walletList) {
+            if (wallet.getOwnerId().equals(userid)) {
+                resultWallet = wallet;
+            }
+        }
+        return resultWallet;
     }
 
     public User mapToEntity(CreateUserDto createDto) {
