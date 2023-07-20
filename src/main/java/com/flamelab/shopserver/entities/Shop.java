@@ -20,6 +20,7 @@ public class Shop {
     private LocalDateTime lastUpdatedDate;
     private String name;
     private String ownerId;
+    private String ownerName;
     private String walletId;
 
 }

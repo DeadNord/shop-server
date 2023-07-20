@@ -9,7 +9,6 @@ import com.flamelab.shopserver.services.ProductsService;
 import com.flamelab.shopserver.services.PurchaseOperationsService;
 import com.flamelab.shopserver.services.ShopsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -65,6 +64,21 @@ public class PurchaseHistoryManagerImpl implements PurchaseHistoryManager {
         return resultPurchaseOperations.stream()
                 .filter(operation -> operation.getProductName().equals(productsService.getProductById(productId).getName()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TransferPurchaseOperationDto> getPurchaseHistoryForShopByProductName(TransferAuthTokenDto authToken, String shopId, String productName) {
+        List<TransferPurchaseOperationDto> resultPurchaseOperations = new ArrayList<>();
+        if (authToken.getRole().equals(ADMIN)) {
+            resultPurchaseOperations.addAll(purchaseOperationMapper.mapToDtoList(purchaseOperationsService.getAllPurchaseOperationsByShopAndContainsTextInProductName(shopId, productName)));
+        } else {
+            if (shopsService.isUserOwnerOfShop(authToken.getUserId(), shopId)) {
+                resultPurchaseOperations.addAll(purchaseOperationMapper.mapToDtoList(purchaseOperationsService.getAllPurchaseOperationsByShopAndContainsTextInProductName(shopId, productName)));
+            } else {
+                throw new ResourceException(UNAUTHORIZED, "User is not owner of the shop.");
+            }
+        }
+        return resultPurchaseOperations;
     }
 
 }

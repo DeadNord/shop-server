@@ -37,13 +37,23 @@ public class PurchaseHistoryController {
     }
 
     @GetMapping("/shop/{shopId}/product/{productId}")
-    public ResponseEntity<?> getPurchaseHistoryForShopByProduct(@RequestHeader("Authorization") String authorization, @PathVariable String shopId, @PathVariable String productId) {
+    public ResponseEntity<?> getPurchaseHistoryForShopByProductId(@RequestHeader("Authorization") String authorization, @PathVariable String shopId, @PathVariable String productId) {
         return ResponseEntity
                 .status(OK)
                 .body(purchaseHistoryManager.getPurchaseHistoryForShopByProductId(
                         authManager.validateAuthToken(authorization, Roles.ADMIN_MERCHANT()),
                         shopId,
                         productId));
+    }
+
+    @GetMapping("/shop/search/{shopId}/product/{productName}")
+    public ResponseEntity<?> getPurchaseHistoryForShopByProductName(@RequestHeader("Authorization") String authorization, @PathVariable String shopId, @PathVariable String productName) {
+        return ResponseEntity
+                .status(OK)
+                .body(purchaseHistoryManager.getPurchaseHistoryForShopByProductName(
+                        authManager.validateAuthToken(authorization, Roles.ADMIN_MERCHANT()),
+                        shopId,
+                        productName));
     }
 
 }

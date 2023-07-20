@@ -64,6 +64,15 @@ public class ShopsController {
                         text));
     }
 
+    @GetMapping("/products/search")
+    public ResponseEntity<?> searchProducts(@RequestHeader("Authorization") String authorization, @RequestParam String text) {
+        return ResponseEntity
+                .status(OK)
+                .body(shopsManager.getAllProductsByTextInParameters(
+                        authManager.validateAuthToken(authorization, Roles.ADMIN_CUSTOMER_MERCHANT()),
+                        text));
+    }
+
     @GetMapping("/products/{shopId}")
     public ResponseEntity<?> getAllProductsInTheShop(@RequestHeader("Authorization") String authorization, @PathVariable String shopId) {
         return ResponseEntity

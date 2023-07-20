@@ -13,6 +13,7 @@ public class TransferShopDto extends TransferCommonDto {
     private String name;
     private String walletId;
     private String ownerId;
+    private String ownerName;
     private double walletAmount;
 
 }

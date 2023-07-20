@@ -46,6 +46,11 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
+    public List<Product> searchAllProductsByText(String text) {
+        return productsRepository.findAllByNameContaining(text);
+    }
+
+    @Override
     public List<Product> getAllProductsByShopId(String shopId) {
         return productsRepository.findByOwnerShopId(shopId);
     }

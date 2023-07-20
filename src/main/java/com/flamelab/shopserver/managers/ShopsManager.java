@@ -19,6 +19,8 @@ public interface ShopsManager {
 
     List<TransferShopDto> getAllShopsByTextInParameters(TransferAuthTokenDto authToken, String text);
 
+    List<TransferProductDto> getAllProductsByTextInParameters(TransferAuthTokenDto authToken, String text);
+
     List<TransferProductDto> getAllProductsInTheShop(TransferAuthTokenDto authToken, String shopId);
 
     TransferShopDto renameShop(TransferAuthTokenDto authToken, String shopId, String newName);

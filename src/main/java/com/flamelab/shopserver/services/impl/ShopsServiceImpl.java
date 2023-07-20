@@ -2,10 +2,12 @@ package com.flamelab.shopserver.services.impl;
 
 import com.flamelab.shopserver.dtos.create.CreateShopDto;
 import com.flamelab.shopserver.entities.Shop;
+import com.flamelab.shopserver.entities.User;
 import com.flamelab.shopserver.exceptions.ResourceException;
 import com.flamelab.shopserver.mappers.ShopMapper;
 import com.flamelab.shopserver.repositories.ShopsRepository;
 import com.flamelab.shopserver.services.ShopsService;
+import com.flamelab.shopserver.services.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,12 @@ public class ShopsServiceImpl implements ShopsService {
 
     private final ShopsRepository shopsRepository;
     private final ShopMapper shopMapper;
+    private final UsersService usersService;
 
     @Override
     public Shop createShop(CreateShopDto createShopDto, String walletId, String userId) {
-        return shopsRepository.save(shopMapper.mapToEntity(createShopDto, walletId, userId));
+        User user = usersService.getUserById(userId);
+        return shopsRepository.save(shopMapper.mapToEntity(createShopDto, walletId, userId, user.getUsername()));
     }
 
     @Override

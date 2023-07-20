@@ -78,6 +78,11 @@ public class ShopsManagerImpl implements ShopsManager {
     }
 
     @Override
+    public List<TransferProductDto> getAllProductsByTextInParameters(TransferAuthTokenDto authToken, String text) {
+        return productMapper.mapToDtoList(productsService.searchAllProductsByText(text));
+    }
+
+    @Override
     public List<TransferProductDto> getAllProductsInTheShop(TransferAuthTokenDto authToken, String shopId) {
         return productMapper.mapToDtoList(productsService.getAllProductsByShopId(shopId));
     }

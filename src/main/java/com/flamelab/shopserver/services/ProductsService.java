@@ -14,6 +14,8 @@ public interface ProductsService {
 
     List<Product> getAllProducts();
 
+    List<Product> searchAllProductsByText(String text);
+
     List<Product> getAllProductsByShopId(String shopId);
 
     boolean isEnoughAmountOfProducts(String productId, int requestedAmount);

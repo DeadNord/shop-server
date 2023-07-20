@@ -16,4 +16,6 @@ public interface ProductsRepository extends JpaRepository<Product, String> {
 
     List<Product> findAllByOwnerShopId(String ownerShopId);
 
+    List<Product> findAllByNameContaining(String name);
+
 }

@@ -31,6 +31,7 @@ public class ShopMapper {
         dto.setName(entity.getName());
         dto.setWalletId(entity.getWalletId());
         dto.setOwnerId(entity.getOwnerId());
+        dto.setOwnerName(entity.getOwnerName());
         dto.setWalletAmount(wallet.getAmount());
         return dto;
     }
@@ -41,7 +42,7 @@ public class ShopMapper {
                 .collect(Collectors.toList());
     }
 
-    public Shop mapToEntity(CreateShopDto createDto, String walletId, String userId) {
+    public Shop mapToEntity(CreateShopDto createDto, String walletId, String userId, String username) {
         Shop entity = new Shop();
         entity.setId(randomDataGenerator.generateId());
         entity.setCreatedDate(LocalDateTime.now());
@@ -49,6 +50,7 @@ public class ShopMapper {
         entity.setName(createDto.getName());
         entity.setWalletId(walletId);
         entity.setOwnerId(userId);
+        entity.setOwnerName(username);
         return entity;
     }
 

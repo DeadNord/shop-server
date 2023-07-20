@@ -56,4 +56,11 @@ public class PurchaseOperationsServiceImpl implements PurchaseOperationsService 
                 .sorted(Comparator.comparing(PurchaseOperation::getCreatedDate))
                 .toList();
     }
+
+    @Override
+    public List<PurchaseOperation> getAllPurchaseOperationsByShopAndContainsTextInProductName(String shopId, String productName) {
+        return purchaseOperationsRepository.findAllByProductNameContaining(productName);
+    }
+
+
 }

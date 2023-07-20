@@ -15,4 +15,6 @@ public interface PurchaseOperationsService {
 
     List<PurchaseOperation> getAllPurchaseOperationsByShop(String shopId);
 
+    List<PurchaseOperation> getAllPurchaseOperationsByShopAndContainsTextInProductName(String shopId, String productName);
+
 }

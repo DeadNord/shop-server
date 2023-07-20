@@ -15,4 +15,6 @@ public interface PurchaseOperationsRepository extends JpaRepository<PurchaseOper
 
     List<PurchaseOperation> findAllByMerchantId(String merchantId);
 
+    List<PurchaseOperation> findAllByProductNameContaining(String productName);
+
 }
