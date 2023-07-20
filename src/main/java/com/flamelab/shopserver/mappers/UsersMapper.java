@@ -3,6 +3,7 @@ package com.flamelab.shopserver.mappers;
 import com.flamelab.shopserver.dtos.create.CreateUserDto;
 import com.flamelab.shopserver.dtos.transfer.TransferUserDto;
 import com.flamelab.shopserver.entities.User;
+import com.flamelab.shopserver.entities.Wallet;
 import com.flamelab.shopserver.enums.Roles;
 import com.flamelab.shopserver.exceptions.ResourceException;
 import com.flamelab.shopserver.utiles.RandomDataGenerator;
@@ -11,10 +12,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.flamelab.shopserver.enums.Roles.*;
+import static com.flamelab.shopserver.enums.WalletOwnerTypes.ADMIN_OWNER;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Component
@@ -24,27 +27,34 @@ public class UsersMapper {
     private final RandomDataGenerator randomDataGenerator;
     private final PasswordEncoder passwordEncoder;
 
-    public TransferUserDto mapToDto(User entity) {
+    public TransferUserDto mapToDto(User entity, Wallet wallet) {
         TransferUserDto dto = new TransferUserDto();
         dto.setId(entity.getId());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setLastUpdatedDate(entity.getLastUpdatedDate());
         dto.setUsername(entity.getUsername());
         dto.setEmail(entity.getEmail());
-        if (entity.getRole().equals(ADMIN.name())) {
-            dto.setWalletId(null);
-        } else {
-            dto.setWalletId(entity.getWalletId());
+        if (!wallet.getOwnerType().equals(ADMIN_OWNER.name())) {
+            dto.setWalletId(wallet.getId());
+            dto.setWalletAmount(wallet.getAmount());
         }
         dto.setRole(Roles.valueOf(entity.getRole()));
         dto.setActive(entity.isActive());
         return dto;
     }
 
-    public List<TransferUserDto> mapToDtoList(List<User> entityList) {
-        return entityList.stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+    public List<TransferUserDto> mapToDtoList(List<User> entityList, List<Wallet> walletList) {
+        List<TransferUserDto> transferDtoList = new ArrayList<>();
+        for (User user : entityList) {
+            transferDtoList.add(
+                    mapToDto(
+                            user,
+                            walletList.stream()
+                                    .filter(wallet -> wallet.getOwnerId().equals(user.getId()))
+                                    .findFirst().get()
+                    ));
+        }
+        return transferDtoList;
     }
 
     public User mapToEntity(CreateUserDto createDto) {

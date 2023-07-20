@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.flamelab.shopserver.enums.NumberActionType.*;
-import static com.flamelab.shopserver.enums.WalletOwnerTypes.SHOP;
+import static com.flamelab.shopserver.enums.WalletOwnerTypes.SHOP_OWNER;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
@@ -45,7 +45,7 @@ public class ShopsManagerImpl implements ShopsManager {
         verifyNewShopData(createShopDto);
         Wallet wallet = walletsService.createWallet(new CreateWalletDto(START_SHOP_MONEY));
         Shop shop = shopsService.createShop(createShopDto, wallet.getId(), authToken.getUserId());
-        walletsService.setWalletOwner(wallet.getId(), SHOP, shop.getId(), shop.getName());
+        walletsService.setWalletOwner(wallet.getId(), SHOP_OWNER, shop.getId(), shop.getName());
         List<Shop> allShopsByOwnerId = shopsService.getAllShopsByOwnerId(authToken.getUserId());
         walletsService.getAllWalletsByShopsIds(allShopsByOwnerId.stream().map(Shop::getId).collect(Collectors.toList()));
         return shopMapper.mapToDto(shopsService.getShopById(shop.getId()), walletsService.getWalletById(wallet.getId()));

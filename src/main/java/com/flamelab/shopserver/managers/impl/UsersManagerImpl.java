@@ -23,10 +23,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.flamelab.shopserver.enums.Roles.ADMIN;
 import static com.flamelab.shopserver.enums.Roles.MERCHANT;
-import static com.flamelab.shopserver.enums.WalletOwnerTypes.USER;
+import static com.flamelab.shopserver.enums.WalletOwnerTypes.USER_OWNER;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -51,15 +52,17 @@ public class UsersManagerImpl implements UsersManager {
         Wallet wallet = walletsService.createWallet(new CreateWalletDto(START_USER_MONEY));
         User user = usersService.createUser(createUserDto);
         usersService.addWalletToUser(user.getId(), wallet.getId());
-        walletsService.setWalletOwner(wallet.getId(), USER, user.getId(), user.getUsername());
+        walletsService.setWalletOwner(wallet.getId(), USER_OWNER, user.getId(), user.getUsername());
         sendRegistrationTemporaryCodeToEmail(user.getEmail(), user.getId());
-        return usersMapper.mapToDto(usersService.getUserById(user.getId()));
+        return usersMapper.mapToDto(usersService.getUserById(user.getId()), walletsService.getWalletById(wallet.getId()));
     }
 
     @Override
     public TransferUserDto createUserAdmin(TransferAuthTokenDto authToken, CreateUserDto createUserDto) {
         validateNewUserData(createUserDto);
-        return usersMapper.mapToDto(usersService.createUser(createUserDto));
+        Wallet wallet = new Wallet();
+        wallet.setOwnerType(ADMIN.name());
+        return usersMapper.mapToDto(usersService.createUser(createUserDto), wallet);
     }
 
     @Override
@@ -81,34 +84,38 @@ public class UsersManagerImpl implements UsersManager {
     @Override
     public TransferUserDto confirmRegistration(String userId, int tempCode) {
         verifyTempCode(new TransferTemporaryCodeDto(tempCode));
-        TransferUserDto userDto = usersMapper.mapToDto(usersService.activateUser(userId));
+        TransferUserDto userDto = usersMapper.mapToDto(usersService.activateUser(userId), walletsService.getWalletByOwnerId(userId));
         temporaryCodeService.deleteTemporaryCode(tempCode);
         return userDto;
     }
 
     @Override
     public TransferUserDto activateUser(TransferAuthTokenDto validateAuthToken, String userId) {
-        return usersMapper.mapToDto(usersService.activateUser(userId));
+        return usersMapper.mapToDto(usersService.activateUser(userId), walletsService.getWalletByOwnerId(userId));
     }
 
     @Override
     public TransferUserDto getUserById(TransferAuthTokenDto authToken, String userId) {
-        return usersMapper.mapToDto(usersService.getUserById(userId));
+        return usersMapper.mapToDto(usersService.getUserById(userId), walletsService.getWalletByOwnerId(userId));
     }
 
     @Override
     public List<TransferUserDto> getAllUsersByTextInParameters(TransferAuthTokenDto authToken, String text) {
-        return usersMapper.mapToDtoList(usersService.getAllUsersByTextInParameters(text));
+        List<User> users = usersService.getAllUsersByTextInParameters(text);
+        List<Wallet> wallets = walletsService.getWalletsByOwnerIds(users.stream().map(User::getId).collect(Collectors.toList()));
+        return usersMapper.mapToDtoList(users, wallets);
     }
 
     @Override
     public List<TransferUserDto> getAllUsers(TransferAuthTokenDto authToken) {
-        return usersMapper.mapToDtoList(usersService.getAllUsers());
+        List<User> users = usersService.getAllUsers();
+        List<Wallet> wallets = walletsService.getWalletsByOwnerIds(users.stream().map(User::getId).collect(Collectors.toList()));
+        return usersMapper.mapToDtoList(users, wallets);
     }
 
     @Override
     public TransferUserDto updateUserData(TransferAuthTokenDto authToken, String userId, UpdateUserDto updateUserDto) {
-        return usersMapper.mapToDto(usersService.updateUserData(userId, updateUserDto));
+        return usersMapper.mapToDto(usersService.updateUserData(userId, updateUserDto), walletsService.getWalletByOwnerId(userId));
     }
 
     @Override

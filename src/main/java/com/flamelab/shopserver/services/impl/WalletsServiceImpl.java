@@ -11,6 +11,7 @@ import com.flamelab.shopserver.services.WalletsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,6 +51,13 @@ public class WalletsServiceImpl implements WalletsService {
         } else {
             throw new ResourceException(NO_CONTENT, String.format("Wallet with ownerId '%s' does not exists", ownerId));
         }
+    }
+
+    @Override
+    public List<Wallet> getWalletsByOwnerIds(List<String> ownerIds) {
+        List<Wallet> wallets = new ArrayList<>();
+        ownerIds.forEach(id -> wallets.add(getWalletById(id)));
+        return wallets;
     }
 
     @Override

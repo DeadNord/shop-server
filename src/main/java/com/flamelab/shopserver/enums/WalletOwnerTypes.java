@@ -1,5 +1,5 @@
 package com.flamelab.shopserver.enums;
 
 public enum WalletOwnerTypes {
-    USER, SHOP
+    USER_OWNER, SHOP_OWNER, ADMIN_OWNER
 }

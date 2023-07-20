@@ -15,6 +15,8 @@ public interface WalletsService {
 
     Wallet getWalletByOwnerId(String ownerId);
 
+    List<Wallet> getWalletsByOwnerIds(List<String> ownerIds);
+
     List<Wallet> getAllWallets();
 
     List<Wallet> getAllWalletsByShopsIds(List<String> shopIds);
