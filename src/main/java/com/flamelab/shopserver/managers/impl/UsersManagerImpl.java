@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import static com.flamelab.shopserver.enums.Roles.ADMIN;
 import static com.flamelab.shopserver.enums.Roles.MERCHANT;
+import static com.flamelab.shopserver.enums.WalletOwnerTypes.ADMIN_OWNER;
 import static com.flamelab.shopserver.enums.WalletOwnerTypes.USER_OWNER;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -60,10 +61,10 @@ public class UsersManagerImpl implements UsersManager {
 
     @Override
     public TransferUserDto createUserAdmin(TransferAuthTokenDto authToken, CreateUserDto createUserDto) {
-        validateNewUserData(createUserDto);
-        Wallet wallet = new Wallet();
-        wallet.setOwnerType(ADMIN.name());
-        return usersMapper.mapToDto(usersService.createUser(createUserDto), wallet);
+        TransferUserDto user = createUser(createUserDto);
+        Wallet wallet = walletsService.getWalletByOwnerId(user.getId());
+        walletsService.setWalletOwner(wallet.getId(), ADMIN_OWNER, user.getId(), user.getUsername());
+        return user;
     }
 
     @Override
@@ -110,12 +111,7 @@ public class UsersManagerImpl implements UsersManager {
     @Override
     public List<TransferUserDto> getAllUsers(TransferAuthTokenDto authToken) {
         List<User> users = usersService.getAllUsers();
-        List<Wallet> wallets = new ArrayList<>();
-        for (User user : users) {
-            if (!user.getRole().equals(ADMIN.name())) {
-                wallets.add(walletsService.getWalletByOwnerId(user.getId()));
-            }
-        }
+        List<Wallet> wallets = walletsService.getWalletsByOwnerIds(users.stream().map(User::getId).collect(Collectors.toList()));
         return usersMapper.mapToDtoList(users, wallets);
     }
 

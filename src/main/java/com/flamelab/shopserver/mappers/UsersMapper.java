@@ -34,10 +34,8 @@ public class UsersMapper {
         dto.setLastUpdatedDate(entity.getLastUpdatedDate());
         dto.setUsername(entity.getUsername());
         dto.setEmail(entity.getEmail());
-        if (!wallet.getOwnerType().equals(ADMIN_OWNER.name())) {
-            dto.setWalletId(wallet.getId());
-            dto.setWalletAmount(wallet.getAmount());
-        }
+        dto.setWalletId(wallet.getId());
+        dto.setWalletAmount(wallet.getAmount());
         dto.setRole(Roles.valueOf(entity.getRole()));
         dto.setActive(entity.isActive());
         return dto;
@@ -49,21 +47,10 @@ public class UsersMapper {
             transferDtoList.add(
                     mapToDto(
                             user,
-                            getWalletByUserId(user.getId(), walletList)
+                            walletList.stream().filter(wallet -> wallet.getOwnerId().equals(user.getId())).findFirst().get()
                     ));
         }
         return transferDtoList;
-    }
-
-    private Wallet getWalletByUserId(String userid, List<Wallet> walletList) {
-        Wallet resultWallet = new Wallet();
-        resultWallet.setOwnerType(ADMIN_OWNER.name());
-        for (Wallet wallet : walletList) {
-            if (wallet.getOwnerId().equals(userid)) {
-                resultWallet = wallet;
-            }
-        }
-        return resultWallet;
     }
 
     public User mapToEntity(CreateUserDto createDto) {

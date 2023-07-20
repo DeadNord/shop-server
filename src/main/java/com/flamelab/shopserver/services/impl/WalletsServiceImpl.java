@@ -56,7 +56,7 @@ public class WalletsServiceImpl implements WalletsService {
     @Override
     public List<Wallet> getWalletsByOwnerIds(List<String> ownerIds) {
         List<Wallet> wallets = new ArrayList<>();
-        ownerIds.forEach(id -> wallets.add(getWalletById(id)));
+        ownerIds.forEach(id -> wallets.add(getWalletByOwnerId(id)));
         return wallets;
     }
 
